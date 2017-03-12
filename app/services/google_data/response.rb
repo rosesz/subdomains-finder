@@ -21,7 +21,7 @@ module GoogleData
     end
 
     def error
-      parsed[:error][:errors].first&.reason&.titleize
+      parsed.dig(:error, :errors)&.first&.[](:reason)&.titleize
     end
 
     private

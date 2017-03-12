@@ -10,7 +10,7 @@ RSpec.describe SubdomainsController, type: :controller do
     context "with empty domain" do
       it "returns http unprocessable entity" do
         get :index, format: :json, params: { domain: "" }
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end

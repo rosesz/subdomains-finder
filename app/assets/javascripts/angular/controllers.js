@@ -5,7 +5,6 @@ app.controller('subdomainsCtrl', ['$scope', 'Subdomain', function ($scope, Subdo
     $scope.searching = true;
     
     var resolved = function(data) {
-      console.log(data);
       $scope.subdomains = data;
       $scope.error = "";
     };

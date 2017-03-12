@@ -1,10 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe GoogleData::Fetcher do
-  subject { described_class.new(domain, api_key: api_key, engine_id: engine_id) }
+  subject { described_class.new(domain, credentials) }
   
-  let(:api_key) { "samplekey" }
-  let(:engine_id) { "sampleid" }
+  let(:credentials) { GoogleData::Credentials.new(api_key: "samplekey", engine_id: "sampleid") }
 
   context "with correct domain" do
     let(:domain) { "onet.pl" }
@@ -17,9 +16,9 @@ RSpec.describe GoogleData::Fetcher do
     end
 
     context "invalid credentials" do
+     let(:credentials) { GoogleData::Credentials.new(api_key: "", engine_id: "sampleid") }
+     
       it "raises error" do
-        subject.api_key = ""
-
         VCR.use_cassette("invalid_credentials") do
           expect { subject.call }.to raise_error(GoogleData::FetchingError, "Key Invalid")
         end

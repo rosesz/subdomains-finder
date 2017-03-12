@@ -21,17 +21,17 @@ module GoogleData
     end
 
     def error
-      parsed[:error][:errors].first.try(:[], :reason).try(:titleize)
+      parsed[:error][:errors].first&.reason&.titleize
     end
 
     private
 
     def parsed
-      JSON.parse(response.body).try(:with_indifferent_access)
+      JSON.parse(response.body)&.with_indifferent_access
     end
 
     def base_link?(link)
-      link.match(/^.*\.[a-zA-Z]*.\/?$/).present?
+      (link =~ /^.*\.[a-zA-Z]*.\/?$/).present?
     end
   end
 end

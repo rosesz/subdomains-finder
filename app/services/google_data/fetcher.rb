@@ -2,15 +2,16 @@ require "faraday"
 
 module GoogleData
   class Fetcher
-    attr_accessor :domain, :subdomains, :api_key, :engine_id, :max_elimination_tries, :results_limit
+    MAX_ELIMINATION_TRIES = ENV["MAX_ELIMINATION_TRIES"] || 10
+    RESULTS_LIMIT         = ENV["RESULTS_LIMIT"] || 30
+    NUMBER_PER_PAGE       = 10
 
-    def initialize(domain, api_key: nil, engine_id: nil)
-      @domain     = domain
-      @subdomains = []
-      @api_key    = api_key   || ENV["API_KEY"] 
-      @engine_id  = engine_id || ENV["ENGINE_ID"]
-      @max_elimination_tries = ENV["MAX_ELIMINATION_TRIES"] || 10
-      @results_limit         = ENV["RESULTS_LIMIT"] || 30
+    attr_accessor :domain, :subdomains, :credentials
+
+    def initialize(domain, credentials = Credentials.new)
+      @domain      = domain
+      @subdomains  = []
+      @credentials = credentials
     end
 
     def self.call(domain)
@@ -32,9 +33,9 @@ module GoogleData
       @conn ||= Faraday.new(
         url: "https://www.googleapis.com/customsearch/v1", 
         params: { 
-          key: api_key, 
-          cx: engine_id,
-          num: 10 
+          key: credentials.api_key, 
+          cx:  credentials.engine_id,
+          num: NUMBER_PER_PAGE 
         } 
       ) 
     end
@@ -51,7 +52,7 @@ module GoogleData
 
     # remove found subdomains from results until nothing is returned
     def fetch_with_elimination
-      max_elimination_tries.times do
+      MAX_ELIMINATION_TRIES.times do
         response = get_subdomains!
         break unless response.items_present?
         break if     query.size_exceeded?
@@ -63,7 +64,7 @@ module GoogleData
     # if too many subdomains where found to put them in the query
     def fetch_with_limit
       start_result = 10
-      start_result.step(results_limit, 10) do |number|
+      start_result.step(RESULTS_LIMIT, 10) do |number|
         response = get_subdomains!(number)
         break unless response.items_present?
       end

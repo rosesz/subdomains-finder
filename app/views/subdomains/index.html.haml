@@ -14,6 +14,8 @@
                 = fa_icon "spinner spin"
     %p.text-danger
       %small {{error}}
+    %p.text-info
+      %small {{notice}}
   .row.marketing
     %h3(ng-repeat="subdomain in subdomains")
       {{subdomain}}

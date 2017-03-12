@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe GoogleData::Query do
   subject { described_class.new(domain) }
 
-  let(:domain)     { "example.com" }
+  let(:domain)     { "http://www.example.com" }
   let(:subdomains) { ["firstsub.example.com", "secondsub.example.com"] }
     
   describe "#query_text" do

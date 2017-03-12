@@ -8,7 +8,7 @@ module GoogleData
     end
 
     def query_text
-      "site:*.#{domain} -inurl:www #{subdomains_to_eliminate}"
+      "site:*.#{stripped_domain} -inurl:www #{subdomains_to_eliminate}"
     end
 
     def size_exceeded?
@@ -26,8 +26,14 @@ module GoogleData
     end
 
     def to_eliminable(subdomain)
-      subdomain.chomp!(".#{domain}")
+      subdomain.chomp!(".#{stripped_domain}")
       "-inurl:#{subdomain}"
+    end
+
+    def stripped_domain
+      domain.gsub("http://", "")
+            .gsub("https://", "")
+            .gsub("www.", "")
     end
   end
 end

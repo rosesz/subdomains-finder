@@ -7,6 +7,11 @@ app.controller('subdomainsCtrl', ['$scope', 'Subdomain', function ($scope, Subdo
     var resolved = function(data) {
       $scope.subdomains = data;
       $scope.error = "";
+      if(data.length == 0) {
+        $scope.notice = "Nothing found";
+      } else {
+        $scope.notice = "";
+      }
     };
 
     var rejected = function(response) {

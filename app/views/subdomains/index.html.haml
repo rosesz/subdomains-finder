@@ -1,0 +1,19 @@
+%div(ng-app="subdomainsApp" ng-controller="subdomainsCtrl")
+  .jumbotron
+    %h1 Subdomains search
+    %p.lead Type a domain to return list of it subdomains
+    %p
+      %form
+        .row
+          .col-md-9
+            %input.input-lg.form-control(type="text" placeholder="Domain..." ng-model="domain")
+          .col-md-3
+            %button.btn.btn-lg.btn-info.btn-block(ng-click="fetchSubdomains(domain)" ng-disabled="searching")
+              Search
+              %span(ng-if="searching")
+                = fa_icon "spinner spin"
+    %p.text-danger
+      %small {{error}}
+  .row.marketing
+    %h3(ng-repeat="subdomain in subdomains")
+      {{subdomain}}
